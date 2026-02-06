@@ -3,6 +3,7 @@
 
 #include "vec_3d.h"
 #include "ray.h"
+#include "sphere.h"
 #include "colour.h"
 
 int main() {
