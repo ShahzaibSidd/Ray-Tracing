@@ -19,7 +19,7 @@ double sphere::radius() const {
     return radius_;
 }
 
-bool hit_sphere(const sphere& curr_sphere, const ray& curr_ray) {
+double hit_sphere(const sphere& curr_sphere, const ray& curr_ray) {
     vec_3d origin_to_center = curr_sphere.origin() - curr_ray.origin();
 
     double a = curr_ray.direction().length_squared();
@@ -27,5 +27,7 @@ bool hit_sphere(const sphere& curr_sphere, const ray& curr_ray) {
     double c = origin_to_center.length_squared() - (curr_sphere.radius() * curr_sphere.radius());
 
     double discriminant = (b * b) - (4 * a * c);
-    return (discriminant >= 0) ? true : false;
+
+    //only take the front point for now
+    return (discriminant >= 0) ? ((-b - std::sqrt(discriminant)) / (2.0 * a)) : -1.0;
 }

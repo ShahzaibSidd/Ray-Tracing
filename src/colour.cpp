@@ -13,8 +13,15 @@ void write_colour(std::ostream& out, const colour& curr_colour) {
 
 colour ray_colour(const ray& r) {
     const sphere curr_sphere = sphere(point_3d(0,0,-1), 0.5);
-    if (hit_sphere(curr_sphere, r)) {
-        return colour(0, 1, 0);
+    double t = hit_sphere(curr_sphere, r);
+
+    if (t > 0) {
+        vec_3d normal = r.at(t) - curr_sphere.origin();
+        
+        double r_val = 0.5 * (normal.x() + 1);
+        double g_val = 0.5 * (normal.y() + 1);
+        double b_val = 0.5 * (normal.z() + 1);
+        return colour(r_val, g_val, b_val);
     }
 
     vec_3d unit_r = unit_vector(r.direction());

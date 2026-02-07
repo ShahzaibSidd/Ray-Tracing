@@ -16,4 +16,4 @@ class sphere{
         double radius() const;
 };
 
-bool hit_sphere(const sphere& curr_sphere, const ray& curr_ray);
+double hit_sphere(const sphere& curr_sphere, const ray& curr_ray);
