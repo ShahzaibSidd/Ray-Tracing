@@ -8,10 +8,10 @@ sphere::sphere() {
 
 sphere::sphere(const point_3d& center, const double& radius) {
     center_ = center;
-    radius_ = radius;
+    radius_ = (radius < 0) ? 0 : radius;
 }
 
-point_3d sphere::origin() const {
+point_3d sphere::center() const {
     return center_;
 }
 
@@ -19,15 +19,28 @@ double sphere::radius() const {
     return radius_;
 }
 
-double hit_sphere(const sphere& curr_sphere, const ray& curr_ray) {
-    vec_3d origin_to_center = curr_sphere.origin() - curr_ray.origin();
+bool sphere::hit(const ray& curr_ray, double min_t, double max_t, hit_info& info) const {
+    vec_3d origin_to_center = center_ - curr_ray.origin();
 
     double a = curr_ray.direction().length_squared();
-    double b = -2.0 * dot_product(curr_ray.direction(), origin_to_center);
-    double c = origin_to_center.length_squared() - (curr_sphere.radius() * curr_sphere.radius());
+    double h = dot_product(curr_ray.direction(), center_ - curr_ray.origin());
+    double c = origin_to_center.length_squared() - (radius_ * radius_);
 
-    double discriminant = (b * b) - (4 * a * c);
+    double discriminant = (h * h) - (a * c);
 
-    //only take the front point for now
-    return (discriminant >= 0) ? ((-b - std::sqrt(discriminant)) / (2.0 * a)) : -1.0;
+    double found_root = (h - std::sqrt(discriminant) / a);
+    if (found_root <= min_t || found_root >= max_t) {
+        found_root = (h + std::sqrt(discriminant) / a);
+        if (found_root <= min_t || found_root >= max_t) {
+            return false;
+        }
+    }
+    
+    info.t_val = found_root;
+    info.contact_point = curr_ray.at(found_root);
+
+    vec_3d normal = (info.contact_point - center_) / radius_;
+    info.set_normal_face(curr_ray, normal);
+
+    return true;
 }

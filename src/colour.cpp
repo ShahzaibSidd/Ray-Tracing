@@ -13,10 +13,11 @@ void write_colour(std::ostream& out, const colour& curr_colour) {
 
 colour ray_colour(const ray& r) {
     const sphere curr_sphere = sphere(point_3d(0,0,-1), 0.5);
+    
     double t = hit_sphere(curr_sphere, r);
 
     if (t > 0) {
-        vec_3d normal = r.at(t) - curr_sphere.origin();
+        vec_3d normal = r.at(t) - curr_sphere.center();
         
         double r_val = 0.5 * (normal.x() + 1);
         double g_val = 0.5 * (normal.y() + 1);
