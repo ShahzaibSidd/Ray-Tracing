@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.h"
+
 #include "vec_3d.h"
 
 class ray {

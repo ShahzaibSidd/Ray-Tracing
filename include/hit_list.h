@@ -1,9 +1,8 @@
 #pragma once
 
-#include "hittable.h"
+#include "common.h"
 
-#include <memory>
-#include <vector>
+#include "hittable.h"
 
 class hit_list : public hittable {
     private:

@@ -1,5 +1,6 @@
-#include <iostream>
 #include <iomanip>
+
+#include "common.h"
 
 #include "vec_3d.h"
 #include "ray.h"

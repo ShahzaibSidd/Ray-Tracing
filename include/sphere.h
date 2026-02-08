@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.h"
+
 #include "hittable.h"
 #include "vec_3d.h"
 #include "ray.h"

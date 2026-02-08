@@ -1,5 +1,7 @@
 #pragma once
 
+#include "common.h"
+
 #include "ray.h"
 
 struct hit_info {
