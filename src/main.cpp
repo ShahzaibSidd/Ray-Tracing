@@ -5,6 +5,8 @@
 #include "ray.h"
 #include "sphere.h"
 #include "colour.h"
+#include "hittable.h"
+#include "hit_list.h"
 
 int main() {
 
@@ -30,6 +32,10 @@ int main() {
 
     point_3d viewport_top_left = camera_origin - point_3d(0,0,focal_length) - viewport_u/2 - viewport_v/2;
     point_3d viewport_pixel_center = viewport_top_left + ((delta_u + delta_v) / 2);
+
+    hit_list objects;
+    objects.add(std::make_shared<sphere>(point_3d(0, 0, -1), 0.5));
+    objects.add(std::make_shared<sphere>(point_3d(0, -100.5, -1), 100));
     
     std::cout << "P3\n";
     std::cout << image_width << " " << image_height << "\n";
@@ -43,7 +49,7 @@ int main() {
 
             ray curr_ray = ray(camera_origin, ray_direction);
 
-            colour pixel = ray_colour(curr_ray);
+            colour pixel = ray_colour(curr_ray, objects);
             write_colour(std::cout, pixel);
         }
     }

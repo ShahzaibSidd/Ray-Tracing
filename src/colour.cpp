@@ -1,5 +1,6 @@
 #include "colour.h"
 #include "sphere.h"
+#include "hit_list.h"
 
 void write_colour(std::ostream& out, const colour& curr_colour) {
     int r_val = int(255.9999 * curr_colour.x());
@@ -11,17 +12,12 @@ void write_colour(std::ostream& out, const colour& curr_colour) {
     return;
 }
 
-colour ray_colour(const ray& r) {
-    const sphere curr_sphere = sphere(point_3d(0,0,-1), 0.5);
-    
-    double t = hit_sphere(curr_sphere, r);
-
-    if (t > 0) {
-        vec_3d normal = r.at(t) - curr_sphere.center();
-        
-        double r_val = 0.5 * (normal.x() + 1);
-        double g_val = 0.5 * (normal.y() + 1);
-        double b_val = 0.5 * (normal.z() + 1);
+colour ray_colour(const ray& r, const hit_list& objects) {
+    hit_info curr_hit;
+    if (objects.hit(r, 0, 100000, curr_hit)) {
+        double r_val = 0.5 * (curr_hit.normal.x() + 1);
+        double g_val = 0.5 * (curr_hit.normal.y() + 1);
+        double b_val = 0.5 * (curr_hit.normal.z() + 1);
         return colour(r_val, g_val, b_val);
     }
 

@@ -28,9 +28,14 @@ bool sphere::hit(const ray& curr_ray, double min_t, double max_t, hit_info& info
 
     double discriminant = (h * h) - (a * c);
 
-    double found_root = (h - std::sqrt(discriminant) / a);
+    if (discriminant < 0) {
+        return false;
+    }
+
+    double sqrt_disc = std::sqrt(discriminant);
+    double found_root = (h - sqrt_disc) / a;
     if (found_root <= min_t || found_root >= max_t) {
-        found_root = (h + std::sqrt(discriminant) / a);
+        found_root = (h + sqrt_disc) / a;
         if (found_root <= min_t || found_root >= max_t) {
             return false;
         }

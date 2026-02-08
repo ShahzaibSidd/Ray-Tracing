@@ -24,7 +24,7 @@ bool hit_list::hit(const ray& curr_ray, double min_t, double max_t, hit_info& in
     for (const auto& object : objects) {
         if (object->hit(curr_ray, min_t, closest_t, closest_hit)) {
             is_hit = true;
-            closest_t = info.t_val;
+            closest_t = closest_hit.t_val;
 
             info = closest_hit;
         }
