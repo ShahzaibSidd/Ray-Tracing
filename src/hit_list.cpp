@@ -16,15 +16,15 @@ void hit_list::clear_list() {
     objects.clear();
 }
 
-bool hit_list::hit(const ray& curr_ray, double min_t, double max_t, hit_info& info) const {
+bool hit_list::hit(const ray& curr_ray, interval curr_interval, hit_info& info) const {
     hit_info closest_hit;
-    double closest_t = max_t;
+    interval closest_interval = curr_interval;
     bool is_hit = false;
     
     for (const auto& object : objects) {
-        if (object->hit(curr_ray, min_t, closest_t, closest_hit)) {
+        if (object->hit(curr_ray, closest_interval, closest_hit)) {
             is_hit = true;
-            closest_t = closest_hit.t_val;
+            closest_interval.max_ = closest_hit.t_val;
 
             info = closest_hit;
         }

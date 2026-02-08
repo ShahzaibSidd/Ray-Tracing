@@ -18,5 +18,5 @@ class sphere : public hittable {
         point_3d center() const;
         double radius() const;
         
-        bool hit(const ray& curr_ray, double min_t, double max_t, hit_info& info) const override;
+        bool hit(const ray& curr_ray, interval curr_interval, hit_info& info) const override;
 };

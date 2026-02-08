@@ -14,7 +14,7 @@ void write_colour(std::ostream& out, const colour& curr_colour) {
 
 colour ray_colour(const ray& r, const hit_list& objects) {
     hit_info curr_hit;
-    if (objects.hit(r, 0, 100000, curr_hit)) {
+    if (objects.hit(r, interval(0, INFINITY), curr_hit)) {
         double r_val = 0.5 * (curr_hit.normal.x() + 1);
         double g_val = 0.5 * (curr_hit.normal.y() + 1);
         double b_val = 0.5 * (curr_hit.normal.z() + 1);

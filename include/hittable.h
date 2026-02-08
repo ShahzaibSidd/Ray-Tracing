@@ -3,6 +3,7 @@
 #include "common.h"
 
 #include "ray.h"
+#include "interval.h"
 
 struct hit_info {
     point_3d contact_point;
@@ -20,5 +21,5 @@ class hittable {
     public:
         virtual ~hittable() = default;
 
-        virtual bool hit(const ray& curr_ray, double min_t, double max_t, hit_info& info) const = 0;
+        virtual bool hit(const ray& curr_ray, interval curr_interval, hit_info& info) const = 0;
 };

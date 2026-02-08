@@ -19,7 +19,7 @@ double sphere::radius() const {
     return radius_;
 }
 
-bool sphere::hit(const ray& curr_ray, double min_t, double max_t, hit_info& info) const {
+bool sphere::hit(const ray& curr_ray, interval curr_interval, hit_info& info) const {
     vec_3d origin_to_center = center_ - curr_ray.origin();
 
     double a = curr_ray.direction().length_squared();
@@ -34,9 +34,9 @@ bool sphere::hit(const ray& curr_ray, double min_t, double max_t, hit_info& info
 
     double sqrt_disc = std::sqrt(discriminant);
     double found_root = (h - sqrt_disc) / a;
-    if (found_root <= min_t || found_root >= max_t) {
+    if (!curr_interval.contains(found_root)) {
         found_root = (h + sqrt_disc) / a;
-        if (found_root <= min_t || found_root >= max_t) {
+        if (!curr_interval.contains(found_root)) {
             return false;
         }
     }
