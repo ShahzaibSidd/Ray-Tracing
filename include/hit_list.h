@@ -3,7 +3,6 @@
 #include "common.h"
 
 #include "hittable.h"
-#include "interval.h"
 
 class hit_list : public hittable {
     private:
