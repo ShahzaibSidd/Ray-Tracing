@@ -13,6 +13,7 @@ class interval {
         
         bool contains(double val) const;
         bool surrounds(double val) const;
+        double clamp(double val) const;
 
         static const interval empty;
         static const interval universe; 

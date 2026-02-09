@@ -5,6 +5,7 @@
 #include "vec_3d.h"
 #include "ray.h"
 #include "hit_list.h"
+#include "interval.h"
 
 using colour = vec_3d;
 

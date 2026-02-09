@@ -1,11 +1,10 @@
 #include "colour.h"
-#include "sphere.h"
-#include "hit_list.h"
 
 void write_colour(std::ostream& out, const colour& curr_colour) {
-    int r_val = int(255.9999 * curr_colour.x());
-    int g_val = int(255.9999 * curr_colour.y());
-    int b_val = int(255.9999 * curr_colour.z());
+    static const interval intensity = interval(0, 0.999);
+    int r_val = int(255.9999 * intensity.clamp(curr_colour.x()));
+    int g_val = int(255.9999 * intensity.clamp(curr_colour.y()));
+    int b_val = int(255.9999 * intensity.clamp(curr_colour.z()));
 
     out << r_val << " " << g_val << " " << b_val << "\n";
 

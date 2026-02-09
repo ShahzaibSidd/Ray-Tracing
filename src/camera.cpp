@@ -6,9 +6,10 @@ camera::camera() {
     //empty
 }
 
-camera::camera(int image_width, double aspect_ratio) {
+camera::camera(int image_width, double aspect_ratio, int samples_per_pixel) {
     image_width_ = image_width;
     aspect_ratio_ = aspect_ratio;
+    samples_per_pixel_ = samples_per_pixel;
 }
 
 void camera::init() {
@@ -46,15 +47,33 @@ void camera::render(const hit_list& objects) {
         for (int x = 0; x < image_width_; x++) {
             point_3d pixel_center = viewport_pixel_center + (x * delta_u_) + (y * delta_v_);
             vec_3d ray_direction = pixel_center - camera_origin_;
+            
+            colour pixel;
+            
+            if (samples_per_pixel_ == 1) {
+                ray curr_ray = ray(camera_origin_, ray_direction);
+                pixel = ray_colour(curr_ray, objects);
+            } else {
+                for (int sample = 0; sample < samples_per_pixel_; sample++) {
+                    ray sampled_ray = sample_ray(ray_direction);
+                    pixel += ray_colour(sampled_ray, objects);
+                }
+            }
+            
+            write_colour(std::cout, pixel / samples_per_pixel_);
 
-            ray curr_ray = ray(camera_origin_, ray_direction);
 
-            colour pixel = ray_colour(curr_ray, objects);
-            write_colour(std::cout, pixel);
         }
     }
 }
 
+ray camera::sample_ray(const vec_3d& ray_direction) {
+    double added_x = rand_double(-1, 1) * (delta_u_.length() / 2);
+    double added_y = rand_double(-1, 1) * (delta_v_.length() / 2);
+    
+    vec_3d new_dir = vec_3d(ray_direction.x()+added_x, ray_direction.y()+added_y, ray_direction.z());
+    return ray(camera_origin_, new_dir);
+}
 
 colour camera::ray_colour(const ray& r, const hit_list& objects) {
     hit_info curr_hit;

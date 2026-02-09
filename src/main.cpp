@@ -13,13 +13,18 @@
 int main() {
     hit_list objects;
     objects.add(std::make_shared<sphere>(point_3d(0, 0, -1), 0.5));
+    
     objects.add(std::make_shared<sphere>(point_3d(0, -100.5, -1), 100));
 
 
+    // control screen size and ratio
     int image_width = 400;
     double aspect_ratio = 16.0 / 9.0;
 
-    camera cam = camera(image_width, aspect_ratio);
+    // control anti-aliasing
+    int samples_per_pixel = 100;
+
+    camera cam = camera(image_width, aspect_ratio, samples_per_pixel);
     cam.render(objects);
 
     return 0;
