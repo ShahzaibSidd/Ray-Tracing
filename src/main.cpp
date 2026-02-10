@@ -25,7 +25,7 @@ int main() {
     int samples_per_pixel = 100;
 
     // control number of reflected rays
-    int max_depth = 10;
+    int max_depth = 50;
 
 
     camera cam = camera(image_width, aspect_ratio, samples_per_pixel, max_depth);
