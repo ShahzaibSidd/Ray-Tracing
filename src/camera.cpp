@@ -6,10 +6,11 @@ camera::camera() {
     //empty
 }
 
-camera::camera(int image_width, double aspect_ratio, int samples_per_pixel) {
+camera::camera(int image_width, double aspect_ratio, int samples_per_pixel, int max_depth) {
     image_width_ = image_width;
     aspect_ratio_ = aspect_ratio;
     samples_per_pixel_ = samples_per_pixel;
+    max_depth_ = max_depth;
 }
 
 void camera::init() {
@@ -31,6 +32,17 @@ void camera::init() {
     delta_v_ = viewport_v_ / image_height_;
 }
 
+void camera::loading_bar(int y) {
+    // goofy ahh loading bar
+    std::clog << std::fixed << std::setprecision(0) << "LOADING: [";
+    for (int completed = 0; completed < ((double)y / image_height_ * 10); completed++) {
+        std::clog << std::fixed << "#";
+    }
+    for (int incompleted = 0; incompleted < (10 - (double)y / image_height_ * 10); incompleted++) {
+        std::clog << " ";
+    }
+    std::clog << "] " << (double)y/image_height_ * 100 << "%        \r" << std::flush;
+}
 
 void camera::render(const hit_list& objects) {
     init();
@@ -43,7 +55,7 @@ void camera::render(const hit_list& objects) {
     point_3d viewport_pixel_center = viewport_top_left + ((delta_u_ + delta_v_) / 2);
 
     for (int y = 0; y < image_height_; y++) {
-        std::clog << std::fixed << std::setprecision(0) << "loading: " << (double)y/image_height_ * 100 << "\n" << std::flush;
+        loading_bar(y);       
         for (int x = 0; x < image_width_; x++) {
             point_3d pixel_center = viewport_pixel_center + (x * delta_u_) + (y * delta_v_);
             vec_3d ray_direction = pixel_center - camera_origin_;
@@ -52,11 +64,11 @@ void camera::render(const hit_list& objects) {
             
             if (samples_per_pixel_ == 1) {
                 ray curr_ray = ray(camera_origin_, ray_direction);
-                pixel = ray_colour(curr_ray, objects);
+                pixel = ray_colour(curr_ray, objects, 0);
             } else {
                 for (int sample = 0; sample < samples_per_pixel_; sample++) {
                     ray sampled_ray = sample_ray(ray_direction);
-                    pixel += ray_colour(sampled_ray, objects);
+                    pixel += ray_colour(sampled_ray, objects, 0);
                 }
             }
             
@@ -75,16 +87,21 @@ ray camera::sample_ray(const vec_3d& ray_direction) {
     return ray(camera_origin_, new_dir);
 }
 
-colour camera::ray_colour(const ray& r, const hit_list& objects) {
+colour camera::ray_colour(const ray& r, const hit_list& objects, int depth) {
+    if (depth > max_depth_) {
+        return colour(0, 0, 0);
+    }
+
     hit_info curr_hit;
     if (objects.hit(r, interval(0, INFINITY), curr_hit)) {
-        double r_val = 0.5 * (curr_hit.normal.x() + 1);
-        double g_val = 0.5 * (curr_hit.normal.y() + 1);
-        double b_val = 0.5 * (curr_hit.normal.z() + 1);
-        return colour(r_val, g_val, b_val);
+        vec_3d reflected_vec = vec_on_hemisphere(curr_hit.normal);
+        ray reflected_ray = ray(curr_hit.contact_point, reflected_vec);
+
+        return 0.5 * ray_colour(reflected_ray, objects, depth + 1);
     }
 
     vec_3d unit_r = unit_vector(r.direction());
     double scaled_y = (unit_r.y() + 1.0) / 2.0;
     return (1.0-scaled_y) * colour(1.0, 1.0, 1.0) + scaled_y * colour(0.5, 0.7, 1.0);
 }
+

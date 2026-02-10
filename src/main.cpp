@@ -24,7 +24,11 @@ int main() {
     // control anti-aliasing
     int samples_per_pixel = 100;
 
-    camera cam = camera(image_width, aspect_ratio, samples_per_pixel);
+    // control number of reflected rays
+    int max_depth = 10;
+
+
+    camera cam = camera(image_width, aspect_ratio, samples_per_pixel, max_depth);
     cam.render(objects);
 
     return 0;

@@ -7,6 +7,8 @@ class camera {
     private:
         int samples_per_pixel_ = 1;
 
+        int max_depth_ = 10;
+
         double aspect_ratio_ = 1.0;
         int image_width_ = 100;
         int image_height_;
@@ -24,14 +26,15 @@ class camera {
         vec_3d delta_v_;
     
         void init();
+        void loading_bar(int y);
 
-        colour ray_colour(const ray& r, const hit_list& objects);
+        colour ray_colour(const ray& r, const hit_list& objects, int depth);
 
         ray sample_ray(const vec_3d& ray_direction);
     
     public:
         camera();
-        camera(int image_width, double aspect_ratio, int samples_per_pixel);
+        camera(int image_width, double aspect_ratio, int samples_per_pixel, int max_depth);
 
         void render(const hit_list& objects);
 };

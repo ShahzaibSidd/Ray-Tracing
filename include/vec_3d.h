@@ -24,9 +24,10 @@ class vec_3d {
         vec_3d& operator*=(double val);
         vec_3d& operator/=(double val);
 
+        vec_3d random();
     };
     
-    using point_3d = vec_3d;
+using point_3d = vec_3d;
 
 inline vec_3d operator+(const vec_3d& u, const vec_3d& v) {
     vec_3d new_vec = vec_3d(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
@@ -75,3 +76,8 @@ inline vec_3d unit_vector(const vec_3d& u) {
     vec_3d new_vec = u / u.length();
     return new_vec;
 }
+
+vec_3d rand_vec();
+vec_3d rand_vec(double min, double max);
+vec_3d rand_unit_vec();
+vec_3d vec_on_hemisphere(const vec_3d& normal_vec);
