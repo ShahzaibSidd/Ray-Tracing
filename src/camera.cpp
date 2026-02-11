@@ -94,7 +94,7 @@ colour camera::ray_colour(const ray& r, const hit_list& objects, int depth) {
 
     hit_info curr_hit;
     if (objects.hit(r, interval(0.001, INFINITY), curr_hit)) {
-        vec_3d reflected_vec = vec_on_hemisphere(curr_hit.normal);
+        vec_3d reflected_vec = curr_hit.normal + rand_unit_vec();
         ray reflected_ray = ray(curr_hit.contact_point, reflected_vec);
 
         return 0.5 * ray_colour(reflected_ray, objects, depth + 1);

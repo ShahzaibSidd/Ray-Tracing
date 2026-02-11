@@ -22,7 +22,7 @@ int main() {
     double aspect_ratio = 16.0 / 9.0;
 
     // control anti-aliasing
-    int samples_per_pixel = 100;
+    int samples_per_pixel = 50;
 
     // control number of reflected rays
     int max_depth = 50;
