@@ -19,13 +19,14 @@ class vec_3d {
         double length() const;
         double length_squared() const;
         
+        bool near_zero() const;
+
         vec_3d operator-();
         vec_3d& operator+=(const vec_3d& vec);
         vec_3d& operator*=(double val);
         vec_3d& operator/=(double val);
-
-        vec_3d random();
-    };
+        
+        };
     
 using point_3d = vec_3d;
 
@@ -75,6 +76,10 @@ inline vec_3d cross_product(const vec_3d& u, const vec_3d& v) {
 inline vec_3d unit_vector(const vec_3d& u) {
     vec_3d new_vec = u / u.length();
     return new_vec;
+}
+
+inline vec_3d reflect(const vec_3d& u, const vec_3d& normal_vec) {
+    return u - 2 * (dot_product(u, normal_vec) * normal_vec);
 }
 
 vec_3d rand_vec();

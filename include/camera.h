@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "colour.h"
+#include "material.h"
 
 class camera {
     private:

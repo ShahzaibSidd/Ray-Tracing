@@ -94,10 +94,13 @@ colour camera::ray_colour(const ray& r, const hit_list& objects, int depth) {
 
     hit_info curr_hit;
     if (objects.hit(r, interval(0.001, INFINITY), curr_hit)) {
-        vec_3d reflected_vec = curr_hit.normal + rand_unit_vec();
-        ray reflected_ray = ray(curr_hit.contact_point, reflected_vec);
-
-        return 0.5 * ray_colour(reflected_ray, objects, depth + 1);
+        ray reflected_ray;
+        colour attenuated_colour;
+        if (curr_hit.mat->scatter(r, curr_hit, attenuated_colour, reflected_ray)) {
+            return attenuated_colour * ray_colour(reflected_ray, objects, depth + 1);
+        } else {
+            return colour(0,0,0);
+        }
     }
 
     vec_3d unit_r = unit_vector(r.direction());

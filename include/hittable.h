@@ -5,10 +5,13 @@
 #include "ray.h"
 #include "interval.h"
 
+class material;
+
 struct hit_info {
     point_3d contact_point;
     double t_val;
     vec_3d normal;
+    std::shared_ptr<material> mat;
     bool front_face;
 
     void set_normal_face(const ray& curr_ray, const vec_3d& outer_normal) {

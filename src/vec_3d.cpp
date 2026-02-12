@@ -56,6 +56,11 @@ double vec_3d::length_squared() const {
     return (x_*x_) + (y_*y_) + (z_*z_);
 }
 
+bool vec_3d::near_zero() const {
+    double min_val = 1e-8;
+    return (std::fabs(x_) < min_val && std::fabs(y_) < min_val && std::fabs(z_) < min_val);
+}
+
 vec_3d rand_vec() {
     return vec_3d(rand_double(), rand_double(), rand_double());
 }

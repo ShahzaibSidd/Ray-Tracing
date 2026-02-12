@@ -3,12 +3,14 @@
 sphere::sphere() {
     center_ = point_3d(0,0,0);
     radius_ = 0;
+    mat_ = nullptr;
     return;
 }
 
-sphere::sphere(const point_3d& center, const double& radius) {
+sphere::sphere(const point_3d& center, const double& radius, std::shared_ptr<material> mat) {
     center_ = center;
     radius_ = (radius < 0) ? 0 : radius;
+    mat_ = mat;
 }
 
 point_3d sphere::center() const {
@@ -46,6 +48,8 @@ bool sphere::hit(const ray& curr_ray, interval curr_interval, hit_info& info) co
 
     vec_3d normal = (info.contact_point - center_) / radius_;
     info.set_normal_face(curr_ray, normal);
+
+    info.mat = mat_;
 
     return true;
 }

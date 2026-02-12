@@ -1,6 +1,5 @@
 #pragma once
 
-
 // common includes
 #include <iostream>
 #include <memory>
