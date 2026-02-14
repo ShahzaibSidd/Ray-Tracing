@@ -87,3 +87,14 @@ vec_3d vec_on_hemisphere(const vec_3d& normal_vec) {
 
     return (dot_prod >= 0) ? curr_vec : (curr_vec * -1.0);
 }
+
+vec_3d reflect(const vec_3d& u, const vec_3d& normal_vec) {
+    return u - 2 * (dot_product(u, normal_vec) * normal_vec);
+}
+
+vec_3d refract(const vec_3d& u, const vec_3d& normal_vec, double rel_refrac_ind) {
+    double cos_val = dot_product(u * 1.0, normal_vec);
+    vec_3d perp = rel_refrac_ind * (u + (cos_val * normal_vec));
+    vec_3d parallel = std::sqrt(std::fabs(1.0 - u.length_squared())) * normal_vec * -1.0;
+    return (perp + parallel);
+}
