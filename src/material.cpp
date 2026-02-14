@@ -28,3 +28,18 @@ bool metal::scatter(const ray& input_ray, const hit_info& curr_info, colour& att
     return (dot_product(scattered_vec, curr_info.normal) > 0);
 }
 
+dielectric::dielectric(double refractive_index) {
+    refractive_index_ = refractive_index;
+}
+
+bool dielectric::scatter(const ray& input_ray, const hit_info& curr_info, colour& attenuated_colour, ray& scattered_ray) const {
+    double rel_refractive_ind = (curr_info.front_face) ? (1.0 / refractive_index_) : refractive_index_;
+    vec_3d unit_dir = unit_vector(input_ray.direction());
+    
+    vec_3d scattered_vec = refract(unit_dir, curr_info.normal, rel_refractive_ind);
+    scattered_ray = ray(curr_info.contact_point, scattered_vec);
+    
+    attenuated_colour = colour(1.0, 1.0, 1.0);
+
+    return true;
+}

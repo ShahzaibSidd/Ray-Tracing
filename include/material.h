@@ -34,3 +34,13 @@ class metal : public material {
         bool scatter(const ray& input_ray, const hit_info& curr_info, colour& attenuated_colour, ray& scattered_ray) const override;
 
 };
+
+class dielectric : public material {
+    private:
+        double refractive_index_;
+
+    public:
+        dielectric(double refractive_index);
+        bool scatter(const ray& input_ray, const hit_info& curr_info, colour& attenuated_colour, ray& scattered_ray) const override;
+
+};

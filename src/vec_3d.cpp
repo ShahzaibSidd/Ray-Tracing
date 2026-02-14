@@ -93,8 +93,12 @@ vec_3d reflect(const vec_3d& u, const vec_3d& normal_vec) {
 }
 
 vec_3d refract(const vec_3d& u, const vec_3d& normal_vec, double rel_refrac_ind) {
-    double cos_val = dot_product(u * 1.0, normal_vec);
+    double cos_val = dot_product(u * -1.0, normal_vec);
+    if (cos_val > 1.0) {
+        cos_val = 1.0;
+    }
+
     vec_3d perp = rel_refrac_ind * (u + (cos_val * normal_vec));
-    vec_3d parallel = std::sqrt(std::fabs(1.0 - u.length_squared())) * normal_vec * -1.0;
+    vec_3d parallel = std::sqrt(std::fabs(1.0 - (rel_refrac_ind * rel_refrac_ind) * (1.0 - cos_val * cos_val))) * normal_vec * -1.0;
     return (perp + parallel);
 }

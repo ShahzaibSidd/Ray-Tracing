@@ -20,7 +20,7 @@ int main() {
     std::shared_ptr<material> mat_s1 = std::make_shared<lambertian>(GREEN);
     objects.add(std::make_shared<sphere>(point_3d(0, -100.5, -1), 100, mat_s1));
 
-    std::shared_ptr<material> mat_s2 = std::make_shared<metal>(YELLOW, 0.4);
+    std::shared_ptr<material> mat_s2 = std::make_shared<dielectric>(1.5);
     objects.add(std::make_shared<sphere>(point_3d(-1, 0, -1), 0.5, mat_s2));
 
     std::shared_ptr<material> mat_s3 = std::make_shared<metal>(GRAY, 1.0);
