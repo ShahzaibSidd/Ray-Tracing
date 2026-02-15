@@ -6,9 +6,10 @@ camera::camera() {
     //empty
 }
 
-camera::camera(int image_width, double aspect_ratio, int samples_per_pixel, int max_depth) {
+camera::camera(int image_width, double aspect_ratio, double vertical_fov, int samples_per_pixel, int max_depth) {
     image_width_ = image_width;
     aspect_ratio_ = aspect_ratio;
+    vertical_fov_ = vertical_fov;
     samples_per_pixel_ = samples_per_pixel;
     max_depth_ = max_depth;
 }
@@ -20,7 +21,11 @@ void camera::init() {
     }
 
     focal_length_ = 1.0;
-    viewport_height_ = 2.0;
+
+    double theta = degrees_to_radians(vertical_fov_);
+    double h = std::tan(theta / 2);
+
+    viewport_height_ = 2 * h * focal_length_;
     viewport_width_ = viewport_height_ * (double(image_width_) / image_height_);
 
     camera_origin_ = point_3d(0,0,0);

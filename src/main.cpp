@@ -13,13 +13,13 @@
 
 int main() {
     hit_list objects;
-    
-    std::shared_ptr<material> mat_ground = std::make_shared<lambertian>(BLUE);
-    objects.add(std::make_shared<sphere>(point_3d(0, 0, -1.2), 0.5, mat_ground));
 
+    //fat sphere to mimic floor
     std::shared_ptr<material> mat_s1 = std::make_shared<lambertian>(GREEN);
     objects.add(std::make_shared<sphere>(point_3d(0, -100.5, -1), 100, mat_s1));
 
+    std::shared_ptr<material> mat_ground = std::make_shared<lambertian>(BLUE);
+    objects.add(std::make_shared<sphere>(point_3d(0, 0, -1.2), 0.5, mat_ground));
 
     //hollow glass sphere
     std::shared_ptr<material> mat_s2 = std::make_shared<dielectric>(1.5);
@@ -27,7 +27,6 @@ int main() {
     objects.add(std::make_shared<sphere>(point_3d(-1, 0, -1), 0.5, mat_s2));
     objects.add(std::make_shared<sphere>(point_3d(-1, 0, -1), 0.4, mat_air_bubble));
     
-
     std::shared_ptr<material> mat_s3 = std::make_shared<metal>(GRAY, 1.0);
     objects.add(std::make_shared<sphere>(point_3d(1, 0, -1), 0.5, mat_s3));
 
@@ -36,6 +35,9 @@ int main() {
     int image_width = 400;
     double aspect_ratio = 16.0 / 9.0;
 
+    // control vertical fov
+    double vert_fov = 110;
+
     // control anti-aliasing
     int samples_per_pixel = 50;
 
@@ -43,7 +45,7 @@ int main() {
     int max_depth = 50;
 
 
-    camera cam = camera(image_width, aspect_ratio, samples_per_pixel, max_depth);
+    camera cam = camera(image_width, aspect_ratio, vert_fov, samples_per_pixel, max_depth);
     cam.render(objects);
 
     return 0;

@@ -13,6 +13,8 @@ class camera {
         double aspect_ratio_ = 1.0;
         int image_width_ = 100;
         int image_height_;
+
+        double vertical_fov_ = 90;
         
         int focal_length_;
         double viewport_height_;
@@ -35,7 +37,7 @@ class camera {
     
     public:
         camera();
-        camera(int image_width, double aspect_ratio, int samples_per_pixel, int max_depth);
+        camera(int image_width, double aspect_ratio, double vertical_vov, int samples_per_pixel, int max_depth);
 
         void render(const hit_list& objects);
 };
