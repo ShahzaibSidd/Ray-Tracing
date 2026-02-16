@@ -15,8 +15,14 @@ class camera {
         int image_height_;
 
         double vertical_fov_ = 90;
+        point_3d look_from_ = point_3d(0,0,0);
+        point_3d look_at_ = point_3d(0,0,-1);
+        vec_3d vup_ = vec_3d(0,1,0);
         
-        int focal_length_;
+        vec_3d u_, v_, w_;
+
+        double focal_length_;
+        
         double viewport_height_;
         double viewport_width_;
 
@@ -37,7 +43,9 @@ class camera {
     
     public:
         camera();
-        camera(int image_width, double aspect_ratio, double vertical_vov, int samples_per_pixel, int max_depth);
+        camera(int image_width, double aspect_ratio, double vertical_fov, 
+               int samples_per_pixel, int max_depth, 
+               point_3d look_from, point_3d look_at);
 
         void render(const hit_list& objects);
 };

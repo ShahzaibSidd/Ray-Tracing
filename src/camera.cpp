@@ -6,12 +6,17 @@ camera::camera() {
     //empty
 }
 
-camera::camera(int image_width, double aspect_ratio, double vertical_fov, int samples_per_pixel, int max_depth) {
+camera::camera(int image_width, double aspect_ratio, double vertical_fov, 
+               int samples_per_pixel, int max_depth, 
+               point_3d look_from, point_3d look_at) {
     image_width_ = image_width;
     aspect_ratio_ = aspect_ratio;
     vertical_fov_ = vertical_fov;
     samples_per_pixel_ = samples_per_pixel;
     max_depth_ = max_depth;
+
+    look_from_ = look_from;
+    look_at_ = look_at;
 }
 
 void camera::init() {
@@ -20,18 +25,22 @@ void camera::init() {
         image_height_ = 1;
     }
 
-    focal_length_ = 1.0;
+    camera_origin_ = look_from_;
+    w_ = unit_vector(look_from_ - look_at_);
+    u_ = unit_vector(cross_product(w_, vup_));
+    v_ = unit_vector(cross_product(u_, w_));    
+
+    focal_length_ = (look_from_ - look_at_).length();
 
     double theta = degrees_to_radians(vertical_fov_);
     double h = std::tan(theta / 2);
 
     viewport_height_ = 2 * h * focal_length_;
     viewport_width_ = viewport_height_ * (double(image_width_) / image_height_);
+    
 
-    camera_origin_ = point_3d(0,0,0);
-
-    viewport_u_ = vec_3d(viewport_width_, 0, 0);
-    viewport_v_ = vec_3d(0, -viewport_height_, 0);
+    viewport_u_ = u_ * viewport_width_;
+    viewport_v_ = v_ * viewport_height_ * -1.0;
 
     delta_u_ = viewport_u_ / image_width_;
     delta_v_ = viewport_v_ / image_height_;
@@ -56,7 +65,7 @@ void camera::render(const hit_list& objects) {
     std::cout << image_width_ << " " << image_height_ << "\n";
     std::cout << "255\n";
 
-    point_3d viewport_top_left = camera_origin_ - point_3d(0,0,focal_length_) - viewport_u_/2 - viewport_v_/2;
+    point_3d viewport_top_left = camera_origin_ - (w_ * focal_length_) - (viewport_u_ / 2) - (viewport_v_ / 2);
     point_3d viewport_pixel_center = viewport_top_left + ((delta_u_ + delta_v_) / 2);
 
     for (int y = 0; y < image_height_; y++) {

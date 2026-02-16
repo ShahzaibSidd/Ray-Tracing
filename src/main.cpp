@@ -36,7 +36,12 @@ int main() {
     double aspect_ratio = 16.0 / 9.0;
 
     // control vertical fov
-    double vert_fov = 110;
+    double vert_fov = 30;
+
+    // control camera position
+    point_3d look_from = point_3d(-2, 3, 2);
+    point_3d look_at = point_3d(0, 0, -1);
+
 
     // control anti-aliasing
     int samples_per_pixel = 50;
@@ -45,7 +50,9 @@ int main() {
     int max_depth = 50;
 
 
-    camera cam = camera(image_width, aspect_ratio, vert_fov, samples_per_pixel, max_depth);
+    camera cam = camera(image_width, aspect_ratio, vert_fov, 
+                        samples_per_pixel, max_depth,
+                        look_from, look_at);
     cam.render(objects);
 
     return 0;
