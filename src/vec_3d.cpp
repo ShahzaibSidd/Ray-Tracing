@@ -69,6 +69,18 @@ vec_3d rand_vec(double min, double max) {
     return vec_3d(rand_double(min, max), rand_double(min, max), rand_double(min, max));
 }
 
+vec_3d rand_on_unit_disk() {
+    vec_3d curr_vec = vec_3d(rand_double(-1, 1), rand_double(-1, 1), 0);
+    double len_sq = curr_vec.length_squared();
+
+    while (len_sq > 1) {
+        curr_vec = vec_3d(rand_double(-1, 1), rand_double(-1, 1), 0);
+        len_sq = curr_vec.length_squared();
+    }
+
+    return curr_vec;
+}
+
 vec_3d rand_unit_vec() {
     vec_3d curr_vec = rand_vec(-1.0, 1.0);
     double len_sq = curr_vec.length_squared();

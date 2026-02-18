@@ -81,6 +81,7 @@ inline vec_3d unit_vector(const vec_3d& u) {
 vec_3d rand_vec();
 vec_3d rand_vec(double min, double max);
 vec_3d rand_unit_vec();
+vec_3d rand_on_unit_disk();
 vec_3d vec_on_hemisphere(const vec_3d& normal_vec);
 
 vec_3d reflect(const vec_3d& u, const vec_3d& normal_vec);

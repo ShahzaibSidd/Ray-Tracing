@@ -6,19 +6,6 @@ camera::camera() {
     //empty
 }
 
-camera::camera(int image_width, double aspect_ratio, double vertical_fov, 
-               int samples_per_pixel, int max_depth, 
-               point_3d look_from, point_3d look_at) {
-    image_width_ = image_width;
-    aspect_ratio_ = aspect_ratio;
-    vertical_fov_ = vertical_fov;
-    samples_per_pixel_ = samples_per_pixel;
-    max_depth_ = max_depth;
-
-    look_from_ = look_from;
-    look_at_ = look_at;
-}
-
 void camera::init() {
     image_height_ = int(image_width_ / aspect_ratio_);
     if (image_height_ < 1) {
@@ -35,7 +22,7 @@ void camera::init() {
     double theta = degrees_to_radians(vertical_fov_);
     double h = std::tan(theta / 2);
 
-    viewport_height_ = 2 * h * focal_length_;
+    viewport_height_ = 2 * h * focus_dist_;
     viewport_width_ = viewport_height_ * (double(image_width_) / image_height_);
     
 
@@ -44,6 +31,11 @@ void camera::init() {
 
     delta_u_ = viewport_u_ / image_width_;
     delta_v_ = viewport_v_ / image_height_;
+
+    double defocus_radians = degrees_to_radians(defocus_angle_ / 2);
+    double defocus_radius = focus_dist_ * std::tan(defocus_radians);
+    defocus_disk_u_ = u_ * defocus_radius;
+    defocus_disk_v_ = v_ * defocus_radius;
 }
 
 void camera::loading_bar(int y) {
@@ -65,19 +57,20 @@ void camera::render(const hit_list& objects) {
     std::cout << image_width_ << " " << image_height_ << "\n";
     std::cout << "255\n";
 
-    point_3d viewport_top_left = camera_origin_ - (w_ * focal_length_) - (viewport_u_ / 2) - (viewport_v_ / 2);
+    point_3d viewport_top_left = camera_origin_ - (w_ * focus_dist_) - (viewport_u_ / 2) - (viewport_v_ / 2);
     point_3d viewport_pixel_center = viewport_top_left + ((delta_u_ + delta_v_) / 2);
 
     for (int y = 0; y < image_height_; y++) {
         loading_bar(y);       
         for (int x = 0; x < image_width_; x++) {
             point_3d pixel_center = viewport_pixel_center + (x * delta_u_) + (y * delta_v_);
-            vec_3d ray_direction = pixel_center - camera_origin_;
+            point_3d ray_origin = (defocus_angle_ <= 0) ? camera_origin_ : sample_defocus_disk();
+            
+            vec_3d ray_direction = pixel_center - ray_origin;
             
             colour pixel;
-            
             if (samples_per_pixel_ == 1) {
-                ray curr_ray = ray(camera_origin_, ray_direction);
+                ray curr_ray = ray(ray_origin, ray_direction);
                 pixel = ray_colour(curr_ray, objects, 0);
             } else {
                 for (int sample = 0; sample < samples_per_pixel_; sample++) {
@@ -93,7 +86,7 @@ void camera::render(const hit_list& objects) {
     }
 }
 
-ray camera::sample_ray(const vec_3d& ray_direction) {
+ray camera::sample_ray(const vec_3d& ray_direction) const {
     double added_x = rand_double(-1, 1) * (delta_u_.length() / 2);
     double added_y = rand_double(-1, 1) * (delta_v_.length() / 2);
     
@@ -101,7 +94,12 @@ ray camera::sample_ray(const vec_3d& ray_direction) {
     return ray(camera_origin_, new_dir);
 }
 
-colour camera::ray_colour(const ray& r, const hit_list& objects, int depth) {
+point_3d camera::sample_defocus_disk() const {
+    vec_3d rand_disc_vec = rand_on_unit_disk();
+    return camera_origin_ + (rand_disc_vec.x() * defocus_disk_u_) + (rand_disc_vec.y() * defocus_disk_v_);
+}
+
+colour camera::ray_colour(const ray& r, const hit_list& objects, int depth) const {
     if (depth > max_depth_) {
         return colour(0, 0, 0);
     }

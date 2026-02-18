@@ -31,30 +31,31 @@ int main() {
     objects.add(std::make_shared<sphere>(point_3d(1, 0, -1), 0.5, mat_s3));
 
 
+        
+    camera cam = camera();
+
     // control screen size and ratio
-    int image_width = 400;
-    double aspect_ratio = 16.0 / 9.0;
+    cam.image_width_ = 400;
+    cam.aspect_ratio_ = 16.0 / 9.0;
 
     // control vertical fov
-    double vert_fov = 30;
+    cam.vertical_fov_ = 20;
 
     // control camera position
-    point_3d look_from = point_3d(-2, 3, 2);
-    point_3d look_at = point_3d(0, 0, -1);
+    cam.look_from_ = point_3d(-2, 2, 1);
+    cam.look_at_ = point_3d(0, 0, -1);
 
+    // control focus blur
+    cam.defocus_angle_ = 10.0;
+    cam.focus_dist_ = 3.4;
 
     // control anti-aliasing
-    int samples_per_pixel = 50;
+    cam.samples_per_pixel_ = 50;
 
     // control number of reflected rays
-    int max_depth = 50;
-
-
-    camera cam = camera(image_width, aspect_ratio, vert_fov, 
-                        samples_per_pixel, max_depth,
-                        look_from, look_at);
+    cam.max_depth_ = 50;
+    
     cam.render(objects);
 
     return 0;
-
 }
