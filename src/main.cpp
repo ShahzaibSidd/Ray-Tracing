@@ -50,7 +50,7 @@ int main() {
     cam.focus_dist_ = 3.4;
 
     // control anti-aliasing
-    cam.samples_per_pixel_ = 50;
+    cam.samples_per_pixel_ = 100;
 
     // control number of reflected rays
     cam.max_depth_ = 50;

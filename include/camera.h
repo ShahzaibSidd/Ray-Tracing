@@ -31,7 +31,7 @@ class camera {
 
         colour ray_colour(const ray& r, const hit_list& objects, int depth) const;
 
-        ray sample_ray(const vec_3d& ray_direction) const;
+        ray sample_ray(const point_3d& origin, const point_3d& pixel_center) const;
 
         point_3d sample_defocus_disk() const;
     
